@@ -33,6 +33,14 @@ class TestLootBag(unittest.TestCase):
 
         self.assertIsInstance(self.LootBag.add_toy(toy_name, child_name), int)
 
+    def test_add_toy_new_child(self):
+        '''Tests add a toy with a new child.'''
+        child_name = string_generator()
+        toy_name = string_generator()
+
+        self.assertIsInstance(self.LootBag.add_toy(toy_name, child_name), int)
+        self.assertIsInstance
+
 
 if __name__ == "__main__":
     unittest.main()
