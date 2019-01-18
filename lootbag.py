@@ -79,9 +79,47 @@ class LootBag:
 
             return cursor.lastrowid
 
+    def remove_toy(self, child_name, toy_name):
+        '''Removes a child's toy before it's delivered.'''
+
+        with sqlite3.connect(self.db) as conn:
+            cursor = conn.cursor()
+
+            try:
+                cursor.execute(f'''
+                    DELETE FROM Toys
+                    WHERE child_id IN (
+                        SELECT child_id FROM Toys
+                        INNER JOIN Children ON Children.id = Toys.child_id
+                        WHERE Children.name = '{child_name}'
+                    ) AND Toys.toy_name LIKE '{toy_name}'
+                ''')
+            except sqlite3.OperationalError as error:
+                print("Error:", error)
+
+    def find_toy(self, child_name, toy_name):
+        '''Find a child's toy'''
+
+        with sqlite3.connect(self.db) as conn:
+            cursor = conn.cursor()
+
+            try:
+                cursor.execute(f'''
+                    SELECT id
+                    FROM Toys
+                    WHERE child_id IN (
+                        SELECT child_id FROM Toys
+                        INNER JOIN Children ON Children.id = Toys.child_id
+                        WHERE Children.name LIKE '{child_name}'
+                    ) AND Toys.toy_name LIKE '{toy_name}'
+                ''')
+                toy = cursor.fetchone()
+                print(toy)
+            except:
+                print('No Toy Found')
+
 if __name__ == "__main__":
     lb = LootBag()
-
     if len(sys.argv) > 1:
 
         #add gift

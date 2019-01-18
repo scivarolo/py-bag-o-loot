@@ -41,6 +41,13 @@ class TestLootBag(unittest.TestCase):
         self.assertIsInstance(self.LootBag.add_toy(toy_name, child_name), int)
         self.assertIsInstance
 
+    def test_remove_toy(self):
+        '''Creates a toy, removes it, and checks it is gone.'''
+        child_name = "Elyse"
+        toy_name = string_generator()
+        self.LootBag.add_toy(toy_name, child_name)
+        self.LootBag.remove_toy(child_name, toy_name)
+        self.assertIsNone(self.LootBag.find_toy(child_name, toy_name))
 
 if __name__ == "__main__":
     unittest.main()
