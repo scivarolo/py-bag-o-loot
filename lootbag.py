@@ -78,3 +78,33 @@ class LootBag:
             ''', (None, child_name))
 
             return cursor.lastrowid
+
+if __name__ == "__main__":
+    lb = LootBag()
+
+    if len(sys.argv) > 1:
+
+        #add
+        if sys.argv[1] == 'add':
+            print('Add gift')
+
+        #remove
+        elif sys.argv[1] == 'remove':
+            print('Remove')
+
+        #ls
+        elif sys.argv[1] == 'ls':
+            print('List gifts')
+
+        #delivered
+        elif sys.argv[1] == 'delivered':
+            print('Delivered')
+
+        #help
+        elif sys.argv[1] == 'help':
+            print('help')
+
+        else:
+            print('You cannot do that! Type help.')
+    else:
+        print('Not enough arguments')
