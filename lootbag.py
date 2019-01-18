@@ -49,7 +49,7 @@ class LootBag:
             cursor.execute(f'''
                 SELECT id
                 FROM Children
-                WHERE name = '{child_name}'
+                WHERE name LIKE '{child_name}'
             ''')
 
             child_id = cursor.fetchone()
@@ -84,11 +84,15 @@ if __name__ == "__main__":
 
     if len(sys.argv) > 1:
 
-        #add
+        #add gift
         if sys.argv[1] == 'add':
             print('Add gift')
+            toy_name = sys.argv[2]
+            child_name = sys.argv[3]
+            lb.add_toy(toy_name, child_name)
+            print(f"{toy_name} added for {child_name}")
 
-        #remove
+        #remove gift
         elif sys.argv[1] == 'remove':
             print('Remove')
 
