@@ -91,7 +91,7 @@ class LootBag:
                     WHERE child_id IN (
                         SELECT child_id FROM Toys
                         INNER JOIN Children ON Children.id = Toys.child_id
-                        WHERE Children.name = '{child_name}'
+                        WHERE Children.name LIKE '{child_name}'
                     ) AND Toys.toy_name LIKE '{toy_name}'
                 ''')
             except sqlite3.OperationalError as error:
@@ -133,6 +133,9 @@ if __name__ == "__main__":
         #remove gift
         elif sys.argv[1] == 'remove':
             print('Remove')
+            child_name = sys.argv[2]
+            toy_name = sys.argv[3]
+            lb.remove_toy(child_name, toy_name)
 
         #ls
         elif sys.argv[1] == 'ls':
