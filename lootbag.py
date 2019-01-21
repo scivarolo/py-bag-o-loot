@@ -119,10 +119,11 @@ class LootBag:
 
     def list_gifts(self):
         '''Prints a list of children with gifts waiting to be delivered.'''
+
         with sqlite3.connect(self.db) as conn:
             cursor = conn.cursor()
 
-            cursor.execute(f'''
+            cursor.execute('''
                 SELECT c.name, group_concat(t.toy_name, ', ') as toys
                 FROM Children c
                 JOIN Toys t ON t.child_id = c.id
@@ -138,6 +139,31 @@ class LootBag:
                     print(row[1], "\n")
             else:
                 print('There are no gifts to be delivered')
+
+    def list_gifts_single(self, child_name):
+        """Prints the gifts to be delivered for a single child.
+
+        Arguments:
+            child_name {string} -- Child's name
+        """
+
+        with sqlite3.connect(self.db) as conn:
+            cursor = conn.cursor()
+
+            cursor.execute(f'''
+                SELECT c.name, group_concat(t.toy_name, ', ') as toys
+                FROM Children c
+                JOIN Toys t ON t.child_id = c.id
+                WHERE t.delivered == 0 AND c.name LIKE '{child_name}'
+            ''')
+
+            result = cursor.fetchone()
+
+            if result[0] is None:
+                print("Child not found.")
+            else:
+                print(f"{result[0]}'s gifts: {result[1]}")
+
 
 if __name__ == "__main__":
     lb = LootBag()
@@ -160,7 +186,10 @@ if __name__ == "__main__":
 
         #ls
         elif sys.argv[1] == 'ls':
-            lb.list_gifts()
+            if(len(sys.argv) == 2):
+                lb.list_gifts()
+            else:
+                lb.list_gifts_single(sys.argv[2])
 
         #delivered
         elif sys.argv[1] == 'delivered':

@@ -62,6 +62,9 @@ class TestLootBag(unittest.TestCase):
         '''Checks if a list of children is printed'''
         # Come back to this
 
+    def test_list_gifts_single(self):
+        '''Check if gifts for single child are printed.'''
+        #come back to this
 
 if __name__ == "__main__":
     unittest.main()
