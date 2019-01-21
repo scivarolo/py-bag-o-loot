@@ -164,6 +164,54 @@ class LootBag:
             else:
                 print(f"{result[0]}'s gifts: {result[1]}")
 
+    def deliver_toys(self, child_name):
+        """Marks a child's toys as delivered and prints a message.
+
+        Arguments:
+            child_name {string} -- The child who's toys are to be delivered.
+        """
+
+        with sqlite3.connect(self.db) as conn:
+            cursor = conn.cursor()
+
+            cursor.execute(f'''
+                SELECT c.name, group_concat(t.toy_name, ', ') as toys
+                FROM Children c
+                JOIN Toys t ON t.child_id = c.id
+                WHERE t.delivered == 0 AND c.name LIKE '{child_name}'
+            ''')
+
+            have_gifts = cursor.fetchone()
+
+            if have_gifts[0] is None:
+                return print(f"Something went wrong. Either {child_name} has no gifts, already received their gifts or doesn't exist.")
+
+            cursor.execute(f'''
+                UPDATE Toys
+                SET delivered=1
+                WHERE child_id IN (
+                    SELECT child_id
+                    FROM Toys
+                    JOIN Children ON Children.id = Toys.child_id
+                    WHERE Children.name LIKE '{child_name}'
+                )
+            ''')
+
+            cursor.execute(f'''
+                SELECT c.name, group_concat(t.toy_name, ', ') as toys
+                FROM Children c
+                JOIN Toys t ON t.child_id = c.id
+                WHERE t.delivered == 1 AND c.name LIKE '{child_name}'
+            ''')
+
+            result = cursor.fetchone()
+            # print(result)
+
+            if result[1] is not None:
+                return print(f"{child_name}'s gifts were delivered!")
+
+            elif result[1] is None:
+                return print(f"Something went wrong. Either {child_name} doesn't exist or they have no gifts to deliver.")
 
 if __name__ == "__main__":
     lb = LootBag()
@@ -192,8 +240,11 @@ if __name__ == "__main__":
                 lb.list_gifts_single(sys.argv[2])
 
         #delivered
-        elif sys.argv[1] == 'delivered':
-            print('Delivered')
+        elif sys.argv[1] == 'deliver':
+            if sys.argv[2]:
+                lb.deliver_toys(sys.argv[2])
+            else:
+                print('Missing child name argument')
 
         #help
         elif sys.argv[1] == 'help':
