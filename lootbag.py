@@ -129,12 +129,15 @@ class LootBag:
                 WHERE t.delivered == 0
                 GROUP BY c.name
             ''')
+            results = cursor.fetchall()
 
-            print('======== Gifts to be Delivered ========')
-            for row in cursor:
-                print(row[0], ": ")
-                print(row[1], "\n")
-
+            if len(results) > 0:
+                print('======== Gifts to be Delivered ========')
+                for row in results:
+                    print(row[0], ": ")
+                    print(row[1], "\n")
+            else:
+                print('There are no gifts to be delivered')
 
 if __name__ == "__main__":
     lb = LootBag()
