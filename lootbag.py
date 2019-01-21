@@ -103,20 +103,19 @@ class LootBag:
         with sqlite3.connect(self.db) as conn:
             cursor = conn.cursor()
 
-            try:
-                cursor.execute(f'''
-                    SELECT id
-                    FROM Toys
-                    WHERE child_id IN (
-                        SELECT child_id FROM Toys
-                        INNER JOIN Children ON Children.id = Toys.child_id
-                        WHERE Children.name LIKE '{child_name}'
-                    ) AND Toys.toy_name LIKE '{toy_name}'
-                ''')
-                toy = cursor.fetchone()
-                print(toy)
-            except:
-                print('No Toy Found')
+            cursor.execute(f'''
+                SELECT id
+                FROM Toys
+                WHERE child_id IN (
+                    SELECT child_id FROM Toys
+                    INNER JOIN Children ON Children.id = Toys.child_id
+                    WHERE Children.name LIKE '{child_name}'
+                ) AND Toys.toy_name LIKE '{toy_name}'
+            ''')
+            toy = cursor.fetchone()
+
+            # Returns tuple with ID, or None if not found
+            return toy
 
 if __name__ == "__main__":
     lb = LootBag()

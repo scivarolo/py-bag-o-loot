@@ -14,7 +14,7 @@ class TestLootBag(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.LootBag = LootBag('../db.db')
+        cls.LootBag = LootBag()
 
     def test_find_child(self):
         '''Tests finding an existing child.'''
@@ -48,6 +48,15 @@ class TestLootBag(unittest.TestCase):
         self.LootBag.add_toy(toy_name, child_name)
         self.LootBag.remove_toy(child_name, toy_name)
         self.assertIsNone(self.LootBag.find_toy(child_name, toy_name))
+
+    def test_find_toy(self):
+        '''Creates a child's toy in the database and then searches for it.'''
+        child_name = string_generator()
+        toy_name = string_generator()
+
+        self.LootBag.add_toy(toy_name, child_name)
+        self.assertIsInstance(self.LootBag.find_toy(child_name, toy_name), tuple)
+        self.LootBag.remove_toy(child_name, toy_name)
 
 if __name__ == "__main__":
     unittest.main()
