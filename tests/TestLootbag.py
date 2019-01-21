@@ -58,5 +58,10 @@ class TestLootBag(unittest.TestCase):
         self.assertIsInstance(self.LootBag.find_toy(child_name, toy_name), tuple)
         self.LootBag.remove_toy(child_name, toy_name)
 
+    def test_list_gifts(self):
+        '''Checks if a list of children is printed'''
+        # Come back to this
+
+
 if __name__ == "__main__":
     unittest.main()

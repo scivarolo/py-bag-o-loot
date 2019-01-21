@@ -117,6 +117,25 @@ class LootBag:
             # Returns tuple with ID, or None if not found
             return toy
 
+    def list_gifts(self):
+        '''Prints a list of children with gifts waiting to be delivered.'''
+        with sqlite3.connect(self.db) as conn:
+            cursor = conn.cursor()
+
+            cursor.execute(f'''
+                SELECT c.name, group_concat(t.toy_name, ', ') as toys
+                FROM Children c
+                JOIN Toys t ON t.child_id = c.id
+                WHERE t.delivered == 0
+                GROUP BY c.name
+            ''')
+
+            print('======== Gifts to be Delivered ========')
+            for row in cursor:
+                print(row[0], ": ")
+                print(row[1], "\n")
+
+
 if __name__ == "__main__":
     lb = LootBag()
     if len(sys.argv) > 1:
@@ -138,7 +157,7 @@ if __name__ == "__main__":
 
         #ls
         elif sys.argv[1] == 'ls':
-            print('List gifts')
+            lb.list_gifts()
 
         #delivered
         elif sys.argv[1] == 'delivered':
