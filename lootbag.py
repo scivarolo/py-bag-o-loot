@@ -248,9 +248,13 @@ if __name__ == "__main__":
 
         #help
         elif sys.argv[1] == 'help':
-            print('help')
-
+            print('''
+            add [toy] [child]
+            remove [child] [toy]
+            ls [child (optional)]
+            deliver [child]
+            ''')
         else:
             print('You cannot do that! Type help.')
     else:
-        print('Not enough arguments')
+        print('Not enough arguments! Type help.')
